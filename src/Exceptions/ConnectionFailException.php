@@ -1,5 +1,5 @@
 <?php
 
-namespace Zoomyboy\PhpSsh\Exception;
+namespace Zoomyboy\PhpSsh\Exceptions;
 
 class ConnectionFailException extends \Exception {}

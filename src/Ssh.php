@@ -4,7 +4,7 @@ namespace Zoomyboy\PhpSsh;
 
 use \phpseclib\Net\SSH2;
 use \phpseclib\Crypt\RSA;
-use Zoomyboy\PhpSsh\Exception\ConnectionFailException;
+use Zoomyboy\PhpSsh\Exceptions\ConnectionFailException;
 
 class Ssh {
 
