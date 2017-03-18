@@ -10,7 +10,7 @@
     {
         "name": "Zoomyboy",
         "email": "pille@zoomyboy.de"
-    },
+    }],
     "autoload": {
         "psr-4": {
             "Zoomyboy\\PhpSsh\\": "src/"
