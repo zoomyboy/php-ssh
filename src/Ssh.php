@@ -25,4 +25,8 @@ class Ssh {
 	public function __call($method, $params) {
 		return $this->connection->{$method}($params[0]);
 	}
+
+	public static function getKeyFiles($path) {
+		return glob($path.'/*.pub');
+	}
 }
