@@ -44,7 +44,7 @@ class Ssh {
 
 	public function connect() {
 		try {
-			$this->connection->login($this->user, $password);
+			$this->connection->login($this->user, $this->auth);
 			return $this;
 		} catch(\ErrorException $e) {
 			throw new ConnectionFailException('Host not found!', 2);
