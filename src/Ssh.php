@@ -43,6 +43,21 @@ class Ssh {
 		}
 	}
 
+	/**
+	 * Gets the absolute path on the Remote machine
+	 *
+	 * @param string $dir Directory - relative to the Home-directory of the user who loggs in
+	 *
+	 * @return string The absolute path
+	 */
+	public function absolutePath($dir) {
+		try {
+			return trim($this->exec('readlink -f '.$dir));
+		} catch(\ErrorException $e) {
+			return false;
+		}
+	}
+
 	public function dirExists($dir) {
 		try {
 			$result = $this->exec('ls -l '.$dir);
