@@ -28,6 +28,31 @@ class Ssh {
 		}
 	}
 
+	/**
+	 * Checks if the SSH Dir exists and can be read
+	 */
+	public function dirAccess($dir) {
+		try {
+			$result = $this->exec('ls -l '.$dir);
+			return strpos($result, 'No such file or directory') === false
+				&& strpos($result, 'Datei oder Verzeichnis nicht gefunden') === false
+				&& strpos($result, 'Keine Berechtigung') === false
+				&& strpos($result, 'Permission denied') === false;
+		} catch(\ErrorException $e) {
+			return false;
+		}
+	}
+
+	public function dirExists($dir) {
+		try {
+			$result = $this->exec('ls -l '.$dir);
+			return strpos($result, 'No such file or directory') === false
+				&& strpos($result, 'Datei oder Verzeichnis nicht gefunden') === false;
+		} catch(\ErrorException $e) {
+			return false;
+		}
+	}
+
 	public function withKeyFile($keyFile) {
 		$key = new RSA();
 		$key->loadKey(file_get_contents($keyFile));
