@@ -11,6 +11,9 @@ class Ssh {
 	private $connection = false;
 	private $auth;
 
+	/* @var int $timeout Timeout for Ssh session */
+	const $timeout = 3000000;
+
 	public static function auth($host, $user) {
 		$ssh = new self();
 		$ssh->connection = new SSH2($host);
@@ -85,6 +88,7 @@ class Ssh {
 	public function connect() {
 		try {
 			$this->connection->login($this->user, $this->auth);
+			$this->setTimeout(self::$timeout);
 			return $this;
 		} catch(\ErrorException $e) {
 			throw new ConnectionFailException('Host not found!', 2);
