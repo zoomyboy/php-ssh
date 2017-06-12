@@ -16,7 +16,7 @@
 
          processIsolation="false"
 
-         stopOnFailure="false"
+         stopOnFailure="true"
 
          syntaxCheck="false">
 
