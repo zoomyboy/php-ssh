@@ -17,9 +17,9 @@
             "Zoomyboy\\PhpSsh\\Tests\\": "tests/",
             "Zoomyboy\\PhpSsh\\": "src/"
         },
-		"files": {
+		"files": [
 			"helpers/functions.php"
-		}
+		]
     },
     "require-dev": {
         "phpunit/phpunit": "^6.0"
