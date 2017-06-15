@@ -2,14 +2,14 @@
 
 namespace Zoomyboy\PhpSsh\Tests;
 
-use Zoomyboy\PhpSsh\Ssh;
+use Zoomyboy\PhpSsh\SshConnection;
 use Zoomyboy\PhpSsh\Mysql;
 
 class PrintfMaskTest extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->ssh = Ssh::auth($this->keyfileHost, $this->keyfileUser)->withKeyFile($this->keyfile)->connect();
+		$this->ssh = SshConnection::auth($this->keyfileHost, $this->keyfileUser)->withKeyFile($this->keyfile)->connect();
 	}
 	
 	/** @test */

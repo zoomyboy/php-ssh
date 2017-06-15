@@ -2,7 +2,7 @@
 
 namespace Zoomyboy\PhpSsh\Tests;
 
-use Zoomyboy\PhpSsh\Ssh;
+use Zoomyboy\PhpSsh\SshConnection;
 
 class SshTest extends TestCase {
 	public function setUp() {
@@ -26,35 +26,35 @@ class SshTest extends TestCase {
 
 	/** @test */
 	public function it_checks_if_an_ssh_connection_succeeds_with_keyfile() {
-		$this->assertTrue(Ssh::auth($this->keyfileHost, $this->keyfileUser)
+		$this->assertTrue(SshConnection::auth($this->keyfileHost, $this->keyfileUser)
 			->withKeyFile($this->keyfile)->check());
-		$this->assertFalse(Ssh::auth($this->keyfileHost.'a', $this->keyfileUser)
+		$this->assertFalse(SshConnection::auth($this->keyfileHost.'a', $this->keyfileUser)
 			->withKeyFile($this->keyfile)->check());
 
 		/* Login is alias for auth */
-		$this->assertTrue(Ssh::login($this->keyfileHost, $this->keyfileUser)
+		$this->assertTrue(SshConnection::login($this->keyfileHost, $this->keyfileUser)
 			->withKeyFile($this->keyfile)->check());
-		$this->assertFalse(Ssh::login($this->keyfileHost.'a', $this->keyfileUser)
+		$this->assertFalse(SshConnection::login($this->keyfileHost.'a', $this->keyfileUser)
 			->withKeyFile($this->keyfile)->check());
 	}
 
 	/**  @test */
 	public function it_checks_if_an_ssh_connection_succeeds_with_password() {
-		$this->assertTrue(Ssh::auth($this->passwordHost, $this->passwordUser)
+		$this->assertTrue(SshConnection::auth($this->passwordHost, $this->passwordUser)
 			->withPassword($this->password)->check());
-		$this->assertFalse(Ssh::auth($this->passwordHost.'a', $this->passwordUser)
+		$this->assertFalse(SshConnection::auth($this->passwordHost.'a', $this->passwordUser)
 			->withPassword($this->password)->check());
 
 		/* Login is alias for auth */
-		$this->assertTrue(Ssh::login($this->passwordHost, $this->passwordUser)
+		$this->assertTrue(SshConnection::login($this->passwordHost, $this->passwordUser)
 			->withPassword($this->password)->check());
-		$this->assertFalse(Ssh::login($this->passwordHost.'a', $this->passwordUser)
+		$this->assertFalse(SshConnection::login($this->passwordHost.'a', $this->passwordUser)
 			->withPassword($this->password)->check());
 	}
 
 	/** @test */
 	public function it_connects_successfully() {
-		$this->assertInstanceOf(Ssh::class, Ssh::auth($this->passwordHost, $this->passwordUser)
+		$this->assertInstanceOf(SshConnection::class, SshConnection::auth($this->passwordHost, $this->passwordUser)
 			->withPassword($this->password)->connect());
 	}
 
@@ -63,7 +63,7 @@ class SshTest extends TestCase {
 	 * @expectedException Zoomyboy\PhpSsh\Exceptions\ConnectionFailException
 	 */
 	public function it_throws_exception_on_connection_failure() {
-		Ssh::auth($this->keyfileHost.'a', $this->keyfileUser)->withKeyFile($this->keyfile)->connect();
+		SshConnection::auth($this->keyfileHost.'a', $this->keyfileUser)->withKeyFile($this->keyfile)->connect();
 	}
 
 }

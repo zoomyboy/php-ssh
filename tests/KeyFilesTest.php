@@ -2,7 +2,7 @@
 
 namespace Zoomyboy\PhpSsh\Tests;
 
-use Zoomyboy\PhpSsh\Ssh;
+use Zoomyboy\PhpSsh\SshConnection;
 
 class KeyFilesTest extends TestCase {
 	public function setUp() {
@@ -13,7 +13,7 @@ class KeyFilesTest extends TestCase {
 	public function it_reads_the_keyfiles_dirs_and_returns_private_key_file() {
 		$this->assertContains(
 			env('PHPSSH_KEYFILE'),
-			Ssh::getPrivateKeyFiles(env('PHPSSH_KEYDIR'))
+			SshConnection::getPrivateKeyFiles(env('PHPSSH_KEYDIR'))
 		);
 	}
 
@@ -21,7 +21,7 @@ class KeyFilesTest extends TestCase {
 	public function it_reads_the_keyfiles_dirs_and_returns_public_key_file() {
 		$this->assertContains(
 			env('PHPSSH_KEYFILE').'.pub',
-			Ssh::getPublicKeyFiles(env('PHPSSH_KEYDIR'))
+			SshConnection::getPublicKeyFiles(env('PHPSSH_KEYDIR'))
 		);
 	}
 }
