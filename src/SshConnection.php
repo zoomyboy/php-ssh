@@ -13,6 +13,7 @@ class SshConnection {
 
 	private $connection = false;
 	private $auth;
+	private $loggedIn = false;
 
 	private $host;
 	private $user;
@@ -55,6 +56,7 @@ class SshConnection {
 		try {
 			$this->connection->login($this->user, $this->auth);
 			$this->setTimeout(self::TIMEOUT);
+			$this->loggedIn = true;
 			return $this;
 		} catch(\ErrorException $e) {
 			throw new ConnectionFailException('Host not found!', 2);
@@ -79,7 +81,7 @@ class SshConnection {
 
 	public function check() {
 		try {
-			return $this->connection->login($this->user, $this->auth) == true;
+			return $this->loggedIn || $this->connection->login($this->user, $this->auth) == true;
 		} catch(\ErrorException $e) {
 			return false;
 		}

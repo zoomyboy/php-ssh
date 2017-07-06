@@ -13,6 +13,6 @@ trait Ssh {
 			$ssh = $ssh->withPassword($this->auth);
 		}
 
-		return $ssh;
+		return $ssh->connect();
 	}
 }
