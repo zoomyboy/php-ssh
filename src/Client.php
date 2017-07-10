@@ -1,23 +1,22 @@
 <?php
-namespace Zoomyboy\PhpSsh;
-require(__DIR__.'/../helpers/functions.php');
 
-use \phpseclib\Net\SSH2;
-use \phpseclib\Crypt\RSA;
+namespace Zoomyboy\PhpSsh;
+
 use Zoomyboy\PhpSsh\Exceptions\ConnectionFailException;
 use Zoomyboy\PhpSsh\Exceptions\FileDoesntExistsRemote;
 use League\Flysystem\Sftp\SftpAdapter;
 use League\Flysystem\Filesystem;
+use Illuminate\Database\Eloquent\Model;
+use phpseclib\Net\SSH2;
+use phpseclib\Crypt\RSA;
 
-class SshConnection {
-
-	private $connection = false;
-	private $auth;
-	private $loggedIn = false;
-
-	private $host;
+class Client {
 	private $user;
-	private $authMethod;
+	private $host;
+	private $ssh2;
+	public $authValue;
+	public $authMthod;
+	public $keyfile;
 
 	/* @var int $timeout Timeout for Ssh session */
 	const TIMEOUT = 3000000;
@@ -33,30 +32,26 @@ class SshConnection {
 			return !preg_match('/\.pub$/', $file);
 		});
 	}
-	
+
 	//--------------------------------- Boilerplate ---------------------------------
 	//*******************************************************************************
 	public static function auth($host, $user) {
 		$ssh = new self();
-		$ssh->connection = new SSH2($host);
+		$ssh->ssh2 = new SSH2($host);
 		$ssh->host = $host;
 		$ssh->user = $user;
 
 		return $ssh;
 	}
 
-	/**
-	 * Alias for auth
-	 */
 	public static function login($host, $user) {
 		return self::auth($host, $user);
 	}
 
 	public function connect() {
 		try {
-			$this->connection->login($this->user, $this->auth);
-			$this->setTimeout(self::TIMEOUT);
-			$this->loggedIn = true;
+			$this->ssh2->login($this->user, $this->authValue);
+			$this->ssh2->setTimeout(self::TIMEOUT);
 			return $this;
 		} catch(\ErrorException $e) {
 			throw new ConnectionFailException('Host not found!', 2);
@@ -64,31 +59,32 @@ class SshConnection {
 	}
 
 	public function withKeyFile($keyFile) {
+		$this->keyfile = $keyFile;
 		$key = new RSA();
 		$key->loadKey(file_get_contents($keyFile));
-		$this->auth = $key;
-		$this->authMethod = 'keyFile';
+		$this->authValue = $key;
+		$this->authMethod = 'KeyFile';
 
 		return $this;
 	}
 
 	public function withPassword($password) {
-		$this->auth = $password;
-		$this->authMethod = 'password';
-
+		$this->authValue = $password;
+		$this->authMethod = 'Password'; 
 		return $this;
 	}
 
 	public function check() {
 		try {
-			return $this->loggedIn || $this->connection->login($this->user, $this->auth) == true;
+			return $this->ssh2->login($this->user, $this->authValue) == true;
 		} catch(\ErrorException $e) {
 			return false;
 		}
 	}
 
-	public function __call($method, $params) {
-		return $this->connection->{$method}($params[0]);
+	public function __call($method, $command) {
+		
+		return $this->ssh2->{$method}($command[0]);
 	}
 
 	//------------------------------------- Ui --------------------------------------
@@ -173,7 +169,7 @@ class SshConnection {
 	}
 
 	public function authMysql($host, $user, $password) {
-		return new Mysql($host, $user, $password, $this->connection);
+		return new Mysql($host, $user, $password, $this->ssh2);
 	}
 
 	public function upload($dir, $dest=false) {
@@ -209,9 +205,9 @@ class SshConnection {
 			'directoryPerm' => 0755
 		];
 
-		if ($this->authMethod == 'keyFile') {
-			$login['privateKey'] = $this->auth;
-		} elseif ($this->authMethod == 'password') {
+		if ($this->authMethod == 'KeyFile') {
+			$login['privateKey'] = $this->keyfile;
+		} elseif ($this->authMethod == 'Password') {
 			$login['password'] = $this->auth;
 		}
 
@@ -247,7 +243,7 @@ class SshConnection {
 	 * @return bool
 	 */
 	public function archive($archiveName) {
-		return new Archive($archiveName, $this->connection);
+		return new Archive($archiveName, $this->ssh2);
 	}
 
 	public function isArchive($archive) {
@@ -280,9 +276,9 @@ class SshConnection {
 			'directoryPerm' => 0755
 		];
 
-		if ($this->authMethod == 'keyFile') {
-			$login['privateKey'] = $this->auth;
-		} elseif ($this->authMethod == 'password') {
+		if ($this->authMethod == 'KeyFile') {
+			$login['privateKey'] = $this->keyfile;
+		} elseif ($this->authMethod == 'Password') {
 			$login['password'] = $this->auth;
 		}
 

@@ -32,6 +32,7 @@
 
     <php>
 
+		<env name="DB_CONNETION" value="testing" />
 
     </php>
 

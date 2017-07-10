@@ -9,7 +9,7 @@ class PrintfMaskTest extends TestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->ssh = SshConnection::auth($this->keyfileHost, $this->keyfileUser)->withKeyFile($this->keyfile)->connect();
+		$this->ssh = $this->getKeyFileConnection();
 	}
 	
 	/** @test */

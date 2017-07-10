@@ -7,13 +7,12 @@ use Zoomyboy\PhpSsh\Mysql;
 
 class SshUiTest extends TestCase {
 
-	private $ssh;
-
 	public function setUp() {
 		parent::setUp();
 
-		$this->ssh = SshConnection::auth($this->keyfileHost, $this->keyfileUser)->withKeyFile($this->keyfile)->connect();
+		$this->ssh = $this->getKeyFileConnection();
 	}
+
 	/** @test */
 	public function it_checks_dir_access() {
 		$this->assertTrue($this->ssh->dirAccess('.'));
@@ -139,6 +138,14 @@ class SshUiTest extends TestCase {
 	 */
 	public function it_throws_error_if_path_is_relative() {
 		$this->ssh->upload('uploadData/upload.txt', 'uploadfile.txt');
+	}
+
+	/** @test */
+	public function it_removes_an_uploaded_folder() {
+		$this->ssh->upload(__DIR__.'/uploadData');
+		$this->assertTrue($this->ssh->exists('uploadData'));
+		$this->ssh->rm('uploadData');
+		$this->assertFalse($this->ssh->exists('uploadData'));
 	}
 
 	/** @test */
