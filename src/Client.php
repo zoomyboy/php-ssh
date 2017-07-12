@@ -33,6 +33,10 @@ class Client {
 		});
 	}
 
+	public static function authMethodFromIndex($index) {
+		return 'with' . AuthMethod::find($index)->first()->title;
+	}
+
 	//--------------------------------- Boilerplate ---------------------------------
 	//*******************************************************************************
 	public static function auth($host, $user) {
