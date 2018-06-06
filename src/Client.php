@@ -74,7 +74,7 @@ class Client {
 
 	public function withPassword($password) {
 		$this->authValue = $password;
-		$this->authMethod = 'Password'; 
+		$this->authMethod = 'Password';
 		return $this;
 	}
 
@@ -87,7 +87,7 @@ class Client {
 	}
 
 	public function __call($method, $command) {
-		
+
 		return $this->ssh2->{$method}($command[0]);
 	}
 
@@ -122,6 +122,15 @@ class Client {
 			return false;
 		}
 	}
+
+    /**
+     * Tests if the last command was executed successful
+     *
+     * @return bool
+     */
+    public function lastCommandSucceeded() {
+        return trim($this->exec('echo $?')) === '0';
+    }
 
 	private function commandSucceded($command) {
 		return trim($this->exec($command.'; echo $?')) === '0';
@@ -240,7 +249,7 @@ class Client {
 
 	/**
 	 * Creates tar archive of a folder / file
-	 * 
+	 *
 	 * @param string $archiveName Name of archive
 	 * @param string $upload File / Folder to archive
 	 *
