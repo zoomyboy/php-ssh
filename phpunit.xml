@@ -1,39 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <phpunit backupGlobals="false"
-
          backupStaticAttributes="false"
-
-         bootstrap="vendor/autoload.php"
-
+         beStrictAboutTestsThatDoNotTestAnything="false"
          colors="true"
-
+         bootstrap="tests/bootstrap.php"
          convertErrorsToExceptions="true"
-
          convertNoticesToExceptions="true"
-
          convertWarningsToExceptions="true"
-
          processIsolation="false"
-
-         stopOnFailure="true"
-
-         syntaxCheck="false">
-
+         stopOnError="false"
+         stopOnFailure="false"
+         verbose="true"
+>
     <testsuites>
-
-        <testsuite name="Package Test Suite">
-
-            <directory suffix=".php">./tests/<directory>
-
+        <testsuite name="PHPSsh Test Suite">
+            <directory suffix="Test.php">./tests</directory>
         </testsuite>
-
     </testsuites>
-
     <php>
-
-		<env name="DB_CONNETION" value="testing" />
-
     </php>
-
 </phpunit>

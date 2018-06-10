@@ -164,8 +164,8 @@ class Client {
 		if (!$dir) {
 			return false;
 		}
-		$this->exec('mkdir "'.$this->mask($dir).'"');
-		return $this->lastCommandSucceeded();
+
+		return $this->exec('mkdir \''.str_replace("'", "'\''", $dir).'\' > /dev/null 2>&1; echo $?') === '0\n';
 	}
 
 	public function cat($file) {
@@ -309,4 +309,26 @@ class Client {
 
 		return true;
 	}
+
+    /**
+     * Set a custom phpseclib SSH Handler to work with
+     *
+     * @param phpseclib\Net\SSH2 $backend
+     */
+    public function setBackend(SSH2 $backend) {
+        $this->ssh2 = $backend;
+    }
+
+    /**
+     * Gets a new Client instance from a custom phpseclib Backend
+     *
+     * @param phpseclib\Net\SSH2 $backend
+     * @return static
+     */
+    public static function fromBackend($backend) {
+        $ssh = new static();
+        $ssh->setBackend($backend);
+
+        return $ssh;
+    }
 }
