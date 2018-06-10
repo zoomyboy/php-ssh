@@ -165,6 +165,7 @@ class Client {
 			return false;
 		}
 		$this->exec('mkdir "'.$this->mask($dir).'"');
+		return $this->lastCommandSucceeded();
 	}
 
 	public function cat($file) {
