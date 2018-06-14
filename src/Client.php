@@ -96,17 +96,21 @@ class Client {
 	/**
 	 * Checks if the SSH Dir exists and can be read
 	 */
-	public function dirAccess($dir) {
-		try {
-			$result = $this->exec('ls -l "'.$this->mask($dir).'"');
-			return strpos($result, 'No such file or directory') === false
-				&& strpos($result, 'Datei oder Verzeichnis nicht gefunden') === false
-				&& strpos($result, 'Keine Berechtigung') === false
-				&& strpos($result, 'Permission denied') === false;
-		} catch(\ErrorException $e) {
-			return false;
-		}
+	public function isWritable(string $dir) {
+        return $this->exec("[ -w ".static::escapePath($dir)." ]; echo $?") === '0\n';
 	}
+
+    public static function escapePath($dir) {
+        if (substr($dir, 0, 2) === '~/') {
+            return "~/".static::escapeString(substr($dir, 2));
+        }
+
+        return static::escapeString($dir);
+    }
+
+    public static function escapeString($dir) {
+        return "'".str_replace("'", "'\''", $dir)."'";
+    }
 
 	/**
 	 * Gets the absolute path on the Remote machine
@@ -141,7 +145,7 @@ class Client {
 	}
 
 	public function fileExists($file) {
-		return $this->commandSucceded('[ -f "'.$this->mask($file).'" ]');
+        return $this->exec("[ -f ".static::escapePath($dir)." ]; echo $?") === '0\n';
 	}
 
 	public function isDir($dir) {
@@ -161,11 +165,10 @@ class Client {
 	}
 
 	public function mkdir($dir) {
-		if (!$dir) {
-			return false;
-		}
+        $code = $this->exec('mkdir -p '.static::escapePath($dir).' > /dev/null 2>&1; echo $?');
 
-		return $this->exec('mkdir \''.str_replace("'", "'\''", $dir).'\' > /dev/null 2>&1; echo $?') === '0\n';
+        return strpos($code, '0') !== false;
+
 	}
 
 	public function cat($file) {
