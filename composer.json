@@ -2,6 +2,7 @@
     "name": "zoomyboy/php-ssh",
     "description": "Ssh WWrapper around PhpSecLib",
     "type": "library",
+    "version": "dev-master",
     "require": {
         "laravel/framework": "^5.6"
     },
