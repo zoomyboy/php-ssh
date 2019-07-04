@@ -2,4 +2,4 @@
 
 namespace Zoomyboy\PhpSsh\Exceptions;
 
-class FileDoesntExistsRemote extends \ Exception {};
+class FileDoesntExistsRemote extends \ Exception {}

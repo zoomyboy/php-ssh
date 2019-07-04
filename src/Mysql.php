@@ -9,7 +9,7 @@ class Mysql {
 	private $ssh;
 	private $dumpCommand = false;
 
-	/** @var string CREDENTIALS_FILE The file where the credentials are stored */
+	/* @var string CREDENTIALS_FILE The file where the credentials are stored */
 	const CREDENTIALS_FILE="cred.cnf";
 
 	public function __construct($host, $user, $password, $ssh) {
@@ -52,17 +52,17 @@ class Mysql {
 		$this->ssh->exec('printf \'[client]\nhost="'.$this->maskPrintf($this->host).'"\nuser="'.$this->maskPrintf($this->user).'"\npassword="'
 			.$this->maskPrintf($this->password)
 		.'"\n\' > '.self::CREDENTIALS_FILE);
-		
+
 		return self::CREDENTIALS_FILE;
 	}
 
-	public static function maskPrintf($str, $printfDelimiter='\'', $stringDelimiter='"') {
+	public static function maskPrintf($str) {
 		return str_replace('"', '\\\\"', self::forPrintf($str, '\''));
 	}
 
 	public static function forPrintf($string, $delimiter = '') {
 		$string = str_replace('%', '%%', $string);
-		if ($delimiter == "'") {
+		if ($delimiter === "'") {
 			$string = str_replace("'", "'\\''", $string);
 		}
 

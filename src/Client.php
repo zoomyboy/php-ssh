@@ -145,7 +145,7 @@ class Client {
 	}
 
 	public function fileExists($file) {
-        return $this->exec("[ -f ".static::escapePath($dir)." ]; echo $?") === '0\n';
+        return $this->exec("[ -f ".static::escapePath($file)." ]; echo $?") === '0\n';
 	}
 
 	public function isDir($dir) {
@@ -293,9 +293,9 @@ class Client {
 			'directoryPerm' => 0755
 		];
 
-		if ($this->authMethod == 'KeyFile') {
+		if ($this->authMethod === 'KeyFile') {
 			$login['privateKey'] = $this->keyfile;
-		} elseif ($this->authMethod == 'Password') {
+		} elseif ($this->authMethod === 'Password') {
 			$login['password'] = $this->auth;
 		}
 
