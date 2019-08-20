@@ -72,6 +72,15 @@ class Client {
 		return $this;
 	}
 
+    public function withKey($key) {
+        $key = new RSA();
+        $key->loadKey($key);
+        $this->authValue = $key;
+        $this->authMethod = 'KeyFile';
+
+        return $this;
+    }
+
 	public function withPassword($password) {
 		$this->authValue = $password;
 		$this->authMethod = 'Password';
