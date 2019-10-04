@@ -13,7 +13,7 @@ use phpseclib\Crypt\RSA;
 class Client {
 	private $user;
 	private $host;
-	private $ssh2;
+	public $ssh2;
 	public $authValue;
 	public $authMthod;
 	public $keyfile;
@@ -55,7 +55,7 @@ class Client {
 	public function connect() {
 		try {
 			$this->ssh2->login($this->user, $this->authValue);
-			$this->ssh2->setTimeout(self::TIMEOUT);
+
 			return $this;
 		} catch(\ErrorException $e) {
 			throw new ConnectionFailException('Host not found!', 2);
@@ -72,9 +72,9 @@ class Client {
 		return $this;
 	}
 
-    public function withKey($key) {
+    public function withKey($rawKey) {
         $key = new RSA();
-        $key->loadKey($key);
+        $key->loadKey($rawKey);
         $this->authValue = $key;
         $this->authMethod = 'KeyFile';
 
@@ -96,8 +96,7 @@ class Client {
 	}
 
 	public function __call($method, $command) {
-
-		return $this->ssh2->{$method}($command[0]);
+		return $this->ssh2->{$method}(...$command);
 	}
 
 	//------------------------------------- Ui --------------------------------------
